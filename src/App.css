@@ -1,0 +1,42 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  /* Ensures the background covers the entire viewport */
+}
+
+body {
+  background-image: url("./assets/Media/white-abstract-background.jpg");
+  background-size: cover; /* Makes the image cover the whole page */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-attachment: fixed; /* Keeps the image fixed when scrolling */
+  height: 100vh;
+}
+
+.heightfix {
+  height: 76px;
+}
+
+.nav-link:hover {
+  text-decoration-line: underline;
+}
+
+.active {
+  text-decoration-line: underline;
+}
+
+.btn-logout:hover {
+  background-color: red;
+}
+
+.container-fluid {
+  padding: 0px;
+  margin: 0px;
+}
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background-color: white !important; /* White background only on small screens */
+  }
+}

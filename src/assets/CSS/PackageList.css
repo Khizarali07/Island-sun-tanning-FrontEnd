@@ -1,0 +1,158 @@
+/* General container for the package list */
+.package-list-container {
+    padding: 30px;
+    text-align: center;
+}
+
+/* Title of the package list */
+.package-list-title {
+    font-weight: 600;
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Cards container */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* Individual card styling */
+/* Delete icon button */
+.delete-icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.delete-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.delete-icon:hover {
+    opacity: 1;
+}
+
+/* Adjusted card container to ensure the delete icon stays at the top right */
+.card {
+    position: relative;
+    margin: 20px;
+    padding: 20px;
+    width: 350px;
+    min-height: 250px;
+    display: grid;
+    grid-template-rows: 20px 50px 1fr 50px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease-in-out;
+}
+
+
+.card:hover {
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+
+/* Exit icon at the top right */
+.card__exit {
+    grid-row: 1/2;
+    justify-self: end;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Card icon styling */
+.card__icon {
+    grid-row: 2/3;
+    font-size: 30px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Card title */
+.card__title {
+    grid-row: 3/4;
+    font-weight: 400;
+    font-size: 22px;
+    color: #ffffff;
+}
+
+/* Package details and expiration */
+.card__details, .card__expiration {
+    color: #ffffff;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Apply link styling */
+.card__apply {
+    grid-row: 4/5;
+    align-self: center;
+}
+
+.card__link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+}
+
+.card__link::after {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    content: "";
+    width: 0%;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.6);
+    transition: all 0.5s ease-in-out;
+}
+
+.card__link:hover::after {
+    width: 100%;
+}
+
+/* Card background gradient styles */
+.card-1 {
+    background: radial-gradient(rgb(55, 185, 198), #9b6a13);
+}
+
+.card-2 {
+    background: radial-gradient(rgb(55, 185, 198), #566f41);
+}
+
+.card-3 {
+    background: radial-gradient(rgb(55, 185, 198), #566f41);
+}
+
+.card-4 {
+    background: radial-gradient(rgb(55, 185, 198), #9b6a13);
+}
+
+.card-5 {
+    background: radial-gradient(rgb(55, 185, 198), #9b6a13);
+}
+
+.card-6 {
+    background: radial-gradient(rgb(55, 185, 198), #566f41);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1600px) {
+    .cards {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+        margin: 10px 0;
+    }
+}

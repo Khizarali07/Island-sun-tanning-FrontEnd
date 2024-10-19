@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.enrollment-form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.search-bar-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.search-input {
+    width: 60%;
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #566f41;
+}
+
+.search-button {
+    padding: 12px 20px;
+    background-color: #566f41;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background-color: #9b6a13;
+}
+
+.enrollment-form-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.left-section {
+    width: 25%;
+    border-left: 5px solid #566f41;
+    padding-left: 20px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.right-section {
+    width: 70%;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    border-color: #566f41;
+}
+
+.form-button {
+    padding: 12px;
+    background-color: #566f41;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.form-button:hover {
+    background-color: #9b6a13;
+    transform: translateY(-2px);
+}
+
+
+.form-button2 {
+    padding: 12px;
+    background-color: #9b6a13;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.form-button2:hover {
+    background-color: #566f41;
+    transform: translateY(-2px);
+}
+
+
+.delete-button {
+    padding: 12px;
+    background-color: #566f41;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.del {
+    padding: 12px;
+    background-color: #566f41;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.delete-button:hover {
+    background-color: #9b6a13;
+    transform: translateY(-2px);
+}
+
+
+/* Assigned packages container */
+.assigned-packages {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Package card style */
+.package-card1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.package-card1:hover {
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Package details */
+.package-details1 {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Package name */
+.package-name1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Package redemptions */
+.package-redemptions1 {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Package expiration */
+.package-expiration1 {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* Delete button */
+.delete-package-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease-in-out;
+}
+
+.delete-package-button:hover {
+    transform: scale(1.1);
+}
+
+/* Delete icon */
+.delete-icon {
+    width: 24px;
+    height: 24px;
+}
+
+
+/* Global styles remain the same */
+
+/* Enrollment form container */
+.enrollment-form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Enrollment form body */
+.enrollment-form-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Left section for Customer Details heading */
+.left-section {
+    width: 25%;
+    border-left: 5px solid #566f41;
+    padding-left: 20px;
+}
+
+/* Right section for the form */
+.right-section {
+    width: 70%;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+    .enrollment-form-body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-section {
+        width: 100%;
+        border-left: none;
+        text-align: center;
+        margin-bottom: 20px; /* Add space between heading and form */
+    }
+
+    .right-section {
+        width: 100%;
+    }
+}
+
+
+
