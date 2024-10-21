@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import "../CSS/EnrollmentForm.css";
-import InputMask from "react-input-mask";
 
-function Enrollment() {
+import "../CSS/EnrollmentForm.css"; // Link to the custom CSS
+import InputMask from "react-input-mask"; // Import the input mask
+import axios from "axios";
+import toast from "react-hot-toast";
+import calculateExpirationDate from "../Components/expirationDate";
+
+const EnrollmentForm = () => {
   const [phone, setPhone] = useState("");
   const [customer, setCustomer] = useState(null);
   const [newCustomer, setNewCustomer] = useState({
@@ -11,187 +15,507 @@ function Enrollment() {
     email: "",
   });
   const [selectedPackage, setSelectedPackage] = useState("");
-  const [packages, setPackages] = useState([]); // Store packages
+  const [packages, setPackages] = useState([]); // State to store packages
+
+  // Fetch the latest packages on component mount and after package changes
+  const fetchPackages = async () => {
+    try {
+      const latestPackages = await axios.get(
+        "http://127.0.0.1:3000/api/v1/getPackages"
+      );
+      setPackages(latestPackages.data.data.Packages);
+    } catch (error) {
+      console.error("Error fetching packages:", error);
+    }
+  };
 
   useEffect(() => {
-    // Fetch packages from API (GET request)
-    const latestPackages = "Fetch packages via GET request";
-    setPackages(latestPackages);
+    fetchPackages(); // Fetch packages when component mounts
   }, []);
 
-  // Search customer by phone (GET request)
-  const handleSearch = (e) => {
+  // Search customer by phone number
+  const handleSearch = async (e) => {
     e.preventDefault();
-    const formattedPhone = phone.replace(/-/g, ""); // Remove dashes
-    const response = "Fetch customer by phone via GET request";
+    try {
+      const response = await await axios.post(
+        "http://127.0.0.1:3000/api/v1/getCustomers",
+        {
+          phone,
+        }
+      );
 
-    if (response) {
-      setCustomer(response.customer);
-      setNewCustomer({
-        name: response.customer.name,
-        phone: response.customer.phone,
-        email: response.customer.email,
+      console.log(response);
+
+      if (response.data.data.currentCustomer) {
+        setCustomer(response.data.data.currentCustomer); // Set the customer data
+        setNewCustomer({
+          name: response.data.data.currentCustomer.name,
+          phone: response.data.data.currentCustomer.phone,
+          email: response.data.data.currentCustomer.email,
+        });
+
+        toast.success(
+          "Customer found! You can now edit details or assign a new package.",
+          {
+            duration: 2000,
+            position: "top-center",
+          }
+        );
+      } else {
+        toast.error("No customer found. You can enroll a new customer.", {
+          duration: 2000,
+          position: "top-center",
+        });
+        setCustomer(null);
+        setNewCustomer({
+          name: "",
+          phone,
+          email: "",
+        });
+      }
+    } catch (error) {
+      console.error("Error searching customer", error);
+      toast.error("No customer found. You can enroll a new customer.", {
+        duration: 2000,
+        position: "top-center",
       });
-      alert("Customer found! You can edit details or assign a package.");
-    } else {
-      alert("No customer found.");
+    }
+  };
+
+  // Enroll a new customer
+  const handleEnroll = async (e) => {
+    e.preventDefault();
+    try {
+      const packageDetails = packages.find(
+        (pkg) => pkg._id === selectedPackage
+      );
+      console.log("Package details for enrollment:", packageDetails);
+
+      let expiration = null;
+
+      // Calculate expiration based on custom duration and unit
+      if (
+        packageDetails &&
+        packageDetails.isUnlimited &&
+        packageDetails.duration &&
+        packageDetails.durationUnit
+      ) {
+        const now = new Date();
+        if (packageDetails.durationUnit === "days") {
+          expiration = new Date(
+            now.setDate(now.getDate() + packageDetails.duration)
+          );
+        } else if (packageDetails.durationUnit === "weeks") {
+          expiration = new Date(
+            now.setDate(now.getDate() + packageDetails.duration * 7)
+          );
+        } else if (packageDetails.durationUnit === "months") {
+          expiration = new Date(
+            now.setMonth(now.getMonth() + packageDetails.duration)
+          );
+        }
+        console.log("Calculated expiration date:", expiration);
+      }
+
+      const customerData = {
+        ...newCustomer,
+        packages: [
+          {
+            packageId: selectedPackage,
+            remainingRedemptions: packageDetails.redemptions,
+            expiration,
+            status: "active", // Status indicating new package assignment
+          },
+        ],
+      };
+
+      console.log("Enrolling customer with data:", customerData);
+      await axios.post("http://127.0.0.1:3000/api/v1/customers", {
+        customerData,
+      });
+
+      toast.success("Customer enrolled successfully", {
+        duration: 2000,
+        position: "top-center",
+      });
+
+      // Reset the form fields
       setCustomer(null);
-      setNewCustomer({ ...newCustomer, phone: formattedPhone });
+      setPhone("");
+      setNewCustomer({ name: "", phone: "", email: "" });
+      setSelectedPackage("");
+      fetchPackages();
+    } catch (error) {
+      console.error("Error enrolling customer:", error);
+      if (error) {
+        toast.error(
+          "This customer is already enrolled and exists in the system.",
+          {
+            duration: 2000,
+            position: "top-center",
+          }
+        );
+      }
     }
   };
 
-  // Assign a package to the customer (POST request)
-  const handleAssignPackage = (e) => {
+  // Assign a package to the customer
+  const handleAssignPackage = async (e) => {
     e.preventDefault();
-    const packageDetails = packages.find((pkg) => pkg._id === selectedPackage);
-    const assignPackage = "Assign package to customer via POST request";
-    alert("Package assigned successfully.");
-  };
+    try {
+      console.log(selectedPackage);
 
-  // Enroll a new customer (POST request)
-  const handleEnroll = (e) => {
-    e.preventDefault();
-    const formattedPhone = newCustomer.phone.replace(/-/g, "");
-    const enrollData = "Enroll customer with package via POST request";
-    alert("Customer enrolled successfully.");
-    setCustomer(null);
-    setPhone("");
-    setNewCustomer({ name: "", phone: "", email: "" });
-    setSelectedPackage("");
-  };
+      const packageDetails = packages.find(
+        (pkg) => pkg._id === selectedPackage
+      );
+      console.log("Package details:", packageDetails);
+      const { redemptions, status } = packageDetails;
 
-  // Update customer details (PUT request)
-  const handleUpdateCustomer = (e) => {
-    e.preventDefault();
-    const updateCustomer = "Update customer details via PUT request";
-    alert("Customer details updated.");
-  };
+      if (packageDetails.isUnlimited) {
+        const expiration = calculateExpirationDate(
+          packageDetails.duration,
+          packageDetails.durationUnit
+        );
 
-  // Delete customer (DELETE request)
-  const handleDeleteCustomer = () => {
-    if (window.confirm("Are you sure?")) {
-      const deleteCustomer = "Delete customer via DELETE request";
-      alert("Customer deleted.");
+        console.log(expiration);
+
+        const res = await axios.post(
+          `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
+          {
+            selectedPackage,
+            status,
+            remainingRedemptions: redemptions,
+            expiration,
+          }
+        );
+        console.log(res);
+      } else {
+        const redemptions = packageDetails.redemptions;
+        await axios.post(
+          `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
+          {
+            selectedPackage,
+            status,
+            remainingRedemptions: redemptions,
+          }
+        );
+      }
+
+      const updatedCustomer = await axios.post(
+        "http://127.0.0.1:3000/api/v1/getCustomers",
+        {
+          phone,
+        }
+      );
+
+      setCustomer(updatedCustomer.data.data.currentCustomer); // Accessing updated customer data
+
+      toast.success("Package assigned successfully", {
+        duration: 2000,
+        position: "top-center",
+      });
+      setSelectedPackage("");
+    } catch (error) {
+      console.error("Error assigning package", error);
+      toast.error("Failed to assign package", {
+        duration: 2000,
+        position: "top-center",
+      });
     }
+  };
+
+  // Update customer details
+  const handleUpdateCustomer = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("Updating customer details:", customer._id);
+
+      const updatedCustomer = await axios.post(
+        `http://127.0.0.1:3000/api/v1/updateCustomer/${customer._id}`,
+        newCustomer
+      );
+      // await updateCustomer(, newCustomer);
+      console.log("Updated customer data:", updatedCustomer);
+
+      setCustomer(updatedCustomer);
+      toast.success("Customer details updated successfully", {
+        duration: 2000,
+        position: "top-center",
+      });
+
+      // Reset the form fields
+      setCustomer(null);
+      setPhone("");
+      setNewCustomer({ name: "", phone: "", email: "" });
+      setSelectedPackage("");
+    } catch (error) {
+      console.error("Error updating customer", error);
+      toast.success("Failed to update customer", {
+        duration: 2000,
+        position: "top-center",
+      });
+    }
+  };
+
+  // // Delete customer
+  const handleDeleteCustomer = async () => {
+    try {
+      if (window.confirm("Are you sure you want to delete this customer?")) {
+        await axios.delete(
+          `http://127.0.0.1:3000/api/v1/deleteCustomer/${customer._id}`
+        );
+        toast.success("Customer deleted successfully", {
+          duration: 2000,
+          position: "top-center",
+        });
+
+        setCustomer(null);
+        setPhone("");
+        setNewCustomer({ name: "", phone: "", email: "" });
+      }
+    } catch (error) {
+      console.error("Error deleting customer", error);
+      toast.error("Failed to delete customer", {
+        duration: 2000,
+        position: "top-center",
+      });
+    }
+  };
+
+  // // Delete a package from the customer's list
+  const handleDeletePackage = async (packageId) => {
+    try {
+      if (
+        window.confirm(
+          "Are you sure you want to remove this package from the customer?"
+        )
+      ) {
+        await axios.post(
+          `http://127.0.0.1:3000/api/v1/deleteCustomerPackage/${customer._id}`,
+          { packageId }
+        );
+
+        // Update the customer state by filtering out the deleted package
+        const updatedPackages = customer.packages.filter(
+          (pkg) => pkg.packageId !== packageId
+        );
+        setCustomer({ ...customer, packages: updatedPackages });
+
+        toast.success("Package removed successfully", {
+          duration: 2000,
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting package", error);
+      toast.error("Failed to delete package", {
+        duration: 2000,
+        position: "top-center",
+      });
+    }
+  };
+
+  // // Render package status (active, expired, fully redeemed)
+  const renderPackageStatus = (pkg) => {
+    const currentDate = new Date();
+    if (pkg.status === "new") return "New Package";
+    if (pkg.packageId.isUnlimited) return "Active Package";
+    if (pkg.remainingRedemptions === 0) return "Fully Redeemed";
+    if (pkg.expiration && new Date(pkg.expiration) < currentDate)
+      return "Expired";
+    return "Active Package";
   };
 
   return (
     <div className="enrollment-form-container">
-      <form onSubmit={handleSearch}>
-        <InputMask
-          type="text"
-          mask="999-999-9999"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="Enter customer phone"
-          className="search-input"
-          required
-        />
-        <button type="submit" className="search-button">
-          Search
-        </button>
-      </form>
-
-      {customer ? (
-        <div>
-          <h3>Customer Found: {customer.name}</h3>
-          <form onSubmit={handleUpdateCustomer}>
-            <input
-              type="text"
-              value={newCustomer.name}
-              onChange={(e) =>
-                setNewCustomer({ ...newCustomer, name: e.target.value })
-              }
-              placeholder="Customer Name"
-              required
-            />
-            <input
-              type="email"
-              value={newCustomer.email}
-              onChange={(e) =>
-                setNewCustomer({ ...newCustomer, email: e.target.value })
-              }
-              placeholder="Customer Email"
-            />
-            <InputMask
-              type="text"
-              mask="999-999-9999"
-              value={newCustomer.phone}
-              onChange={(e) =>
-                setNewCustomer({ ...newCustomer, phone: e.target.value })
-              }
-              placeholder="Customer Phone"
-              required
-            />
-            <button type="submit">Update Customer</button>
-            <button type="button" onClick={handleDeleteCustomer}>
-              Delete Customer
-            </button>
-          </form>
-
-          <h3>Assign Package</h3>
-          <form onSubmit={handleAssignPackage}>
-            <select
-              value={selectedPackage}
-              onChange={(e) => setSelectedPackage(e.target.value)}
-              required
-            >
-              <option value="">Select Package</option>
-              {/* {packages?.map((pack) => (
-                <option key={pack._id} value={pack._id}>
-                  {pack.name}
-                </option>
-              ))} */}
-            </select>
-            <button type="submit">Assign Package</button>
-          </form>
-        </div>
-      ) : (
-        <form onSubmit={handleEnroll}>
-          <input
-            type="text"
-            placeholder="Customer Name"
-            value={newCustomer.name}
-            onChange={(e) =>
-              setNewCustomer({ ...newCustomer, name: e.target.value })
-            }
-            required
-          />
-          <input
-            type="email"
-            placeholder="Customer Email"
-            value={newCustomer.email}
-            onChange={(e) =>
-              setNewCustomer({ ...newCustomer, email: e.target.value })
-            }
-          />
+      <div className="search-bar-container">
+        <form onSubmit={handleSearch}>
           <InputMask
             type="text"
-            mask="999-999-9999"
-            value={newCustomer.phone}
-            onChange={(e) =>
-              setNewCustomer({ ...newCustomer, phone: e.target.value })
-            }
-            placeholder="Customer Phone"
+            mask="0399-9999999" // Mask to enforce the phone format
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Enter existing customer phone number"
+            className="search-input"
             required
           />
-          <select
-            value={selectedPackage}
-            onChange={(e) => setSelectedPackage(e.target.value)}
-            required
-          >
-            <option value="">Select Package</option>
-            {/* {packages?.map((pack) => (
-              <option key={pack._id} value={pack._id}>
-                {pack.name}
-              </option>
-            ))} */}
-          </select>
-          <button type="submit">Enroll Customer</button>
+          <button type="submit" className="search-button">
+            Search
+          </button>
         </form>
-      )}
+      </div>
+
+      <div className="enrollment-form-body">
+        <div className="left-section">
+          <h3 className="section-title">Customer Details</h3>
+        </div>
+
+        <div className="right-section">
+          {customer ? (
+            <div>
+              <h3>Customer Found: {customer.name}</h3>
+              <form onSubmit={handleUpdateCustomer}>
+                <input
+                  type="text"
+                  placeholder="Customer Name"
+                  value={newCustomer.name}
+                  onChange={(e) =>
+                    setNewCustomer({ ...newCustomer, name: e.target.value })
+                  }
+                  className="form-input"
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Customer Email"
+                  value={newCustomer.email}
+                  onChange={(e) =>
+                    setNewCustomer({ ...newCustomer, email: e.target.value })
+                  }
+                  className="form-input"
+                />
+                <InputMask
+                  type="text"
+                  mask="0399-9999999"
+                  value={newCustomer.phone}
+                  onChange={(e) =>
+                    setNewCustomer({ ...newCustomer, phone: e.target.value })
+                  }
+                  className="form-input"
+                  placeholder="Customer Phone"
+                  required
+                />
+                <button type="submit" className="form-button">
+                  Update Customer
+                </button>
+                <button
+                  type="button"
+                  className="form-button2"
+                  onClick={handleDeleteCustomer}
+                >
+                  Delete Customer
+                </button>
+              </form>
+
+              <h3 className="section-title">Assigned Packages</h3>
+              <div className="assigned-packages">
+                {customer.packages && customer.packages.length > 0 ? (
+                  customer.packages.map((pkg) => (
+                    <div key={pkg._id} className="package-card1">
+                      <div className="package-details1">
+                        <span className="package-name1">
+                          {pkg.packageId.name}
+                        </span>
+                        <span className="package-status">
+                          {renderPackageStatus(pkg)}
+                        </span>
+                        <span className="package-redemptions1">
+                          {pkg.packageId.isUnlimited
+                            ? "Unlimited Redemptions"
+                            : `${pkg.remainingRedemptions} Redemptions`}
+                        </span>
+                        <span className="package-expiration1">
+                          {pkg.expiration
+                            ? `Expires: ${new Date(
+                                pkg.expiration
+                              ).toLocaleDateString()}`
+                            : "No Expiration"}
+                        </span>
+                        <span className="package-expiration1">
+                          Assigned on:{" "}
+                          {new Date(pkg.assignedDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleDeletePackage(pkg.packageId)}
+                        className="delete-package-button"
+                      >
+                        <img
+                          src="https://img.icons8.com/ios-glyphs/30/000000/trash--v1.png"
+                          alt="Delete"
+                          className="delete-icon"
+                        />
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p>No packages assigned to this customer.</p>
+                )}
+              </div>
+
+              <form onSubmit={handleAssignPackage}>
+                <select
+                  value={selectedPackage}
+                  onChange={(e) => setSelectedPackage(e.target.value)}
+                  className="form-input"
+                  required
+                >
+                  <option value="">Select Package</option>
+                  {packages.map((pack) => (
+                    <option key={pack._id} value={pack._id}>
+                      {pack.name}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit" className="form-button">
+                  Assign Package
+                </button>
+              </form>
+            </div>
+          ) : (
+            <form onSubmit={handleEnroll}>
+              <input
+                type="text"
+                placeholder="Customer Name"
+                value={newCustomer.name}
+                onChange={(e) =>
+                  setNewCustomer({ ...newCustomer, name: e.target.value })
+                }
+                className="form-input"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Customer Email"
+                value={newCustomer.email}
+                onChange={(e) =>
+                  setNewCustomer({ ...newCustomer, email: e.target.value })
+                }
+                className="form-input"
+              />
+              <InputMask
+                type="text"
+                mask="0399-9999999"
+                value={newCustomer.phone}
+                onChange={(e) =>
+                  setNewCustomer({ ...newCustomer, phone: e.target.value })
+                }
+                className="form-input"
+                placeholder="Customer Phone"
+                required
+              />
+              <select
+                value={selectedPackage}
+                onChange={(e) => setSelectedPackage(e.target.value)}
+                className="form-input"
+                required
+              >
+                <option value="">Select Package</option>
+                {packages.map((pack) => (
+                  <option key={pack._id} value={pack._id}>
+                    {pack.name}
+                  </option>
+                ))}
+              </select>
+              <button type="submit" className="form-button">
+                Enroll Customer
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-export default Enrollment;
+export default EnrollmentForm;

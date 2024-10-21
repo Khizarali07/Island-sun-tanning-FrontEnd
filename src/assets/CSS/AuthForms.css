@@ -1,0 +1,120 @@
+/* Auth container for Forgot and Reset Password */
+.auth-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+/* Auth title */
+.auth-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Message (error or success) */
+.message {
+  color: #4caf50;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.error-message {
+  color: #f44336;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+/* Input group */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Form input */
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-bottom: 2px solid #ddd;
+  outline: none;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.form-input:focus {
+  border-color: #566f41;
+}
+
+/* Submit button */
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #566f41;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.submit-button:hover {
+  background-color: #9b6a13;
+  transform: scale(1.03);
+}
+
+/* Forgot password text */
+.forgot-password-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+}
+
+/* Reset link style */
+.reset-link {
+  color: #566f41;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.reset-link:hover {
+  color: #9b6a13;
+}
+
+/* Responsive styling */
+@media only screen and (max-width: 600px) {
+  .auth-container {
+    padding: 30px;
+  }
+
+  .auth-title {
+    font-size: 24px;
+  }
+
+  .form-input {
+    font-size: 14px;
+  }
+
+  .submit-button {
+    padding: 10px;
+  }
+}

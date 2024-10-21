@@ -1,0 +1,97 @@
+.bed-dashboard {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.bed-creation-section,
+.bed-list-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.bed-form {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.package-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.package-checkbox {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.create-bed-button {
+  padding: 12px 20px;
+  background-color: #566f41;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.create-bed-button:hover {
+  background-color: #45a049;
+}
+
+.bed-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.bed-card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bed-name {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.assigned-packages ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.package-item {
+  background-color: #e0e0e0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}

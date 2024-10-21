@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import Logo from "../Media/logo.png";
 import Logout from "../Media/logout-rounded.png";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 
 function Navbar({ jwtToken }) {
   const [token, setToken] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setToken(jwtToken);
@@ -127,6 +128,7 @@ function Navbar({ jwtToken }) {
                   onClick={() => {
                     window.sessionStorage.removeItem("jwtToken");
                     setToken("");
+                    navigate("/");
                     toast.success("Logout successful", {
                       duration: 2000,
                       position: "top-center",

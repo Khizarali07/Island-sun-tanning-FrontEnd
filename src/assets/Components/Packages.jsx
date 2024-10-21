@@ -1,6 +1,26 @@
 import "../CSS/PackageList.css";
+import axios from "axios";
 
-function Packages() {
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
+
+import { FaEdit } from "react-icons/fa";
+
+function Packages({ packages, setPackages, updatePackage }) {
+  const deletePackage = async (packageId) => {
+    await axios.delete(
+      `http://127.0.0.1:3000/api/v1/deletePackage/${packageId}`
+    );
+
+    toast.success("Package deleted successfully", {
+      duration: 2000,
+      position: "top-center",
+    });
+
+    const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
+    setPackages(data.data.data.Packages);
+  };
+
   const getExpirationString = (pack) => {
     if (pack.isUnlimited && pack.duration && pack.durationUnit) {
       return `Expires in ${pack.duration} ${pack.durationUnit}`;
@@ -12,8 +32,8 @@ function Packages() {
     <div className="package-list-container">
       <h2 className="package-list-title">Available Packages</h2>
       <div className="cards">
-        {packages.map((pack, index) => (
-          <div key={pack._id} className={`card card-${(index % 6) + 1}`}>
+        {packages.map((pack) => (
+          <div key={pack._id} className={"card card-2"}>
             <div className="card__icon">
               <i className="fas fa-gift"></i>
             </div>
@@ -28,7 +48,15 @@ function Packages() {
                   className="delete-icon"
                 />
               </button>
+
+              <button
+                onClick={() => updatePackage(pack)}
+                className="update-icon-button"
+              >
+                <FaEdit className="update-icon" />
+              </button>
             </p>
+
             <h2 className="card__title">{pack.name}</h2>
             <p className="card__details">
               {pack.isUnlimited
@@ -42,5 +70,11 @@ function Packages() {
     </div>
   );
 }
+
+Packages.propTypes = {
+  packages: PropTypes.array.isRequired,
+  setPackages: PropTypes.func.isRequired, // `setPackages` is a required function
+  updatePackage: PropTypes.func.isRequired, // `updatePackage` is a required function
+};
 
 export default Packages;
