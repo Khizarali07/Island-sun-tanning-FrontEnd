@@ -11,9 +11,19 @@ import AdminDashboard from "./assets/Pages/AdminDashboard.jsx";
 import ForgotPassword from "./assets/Pages/ForgetPassword.jsx";
 import ResetPassword from "./assets/Pages/ResetPassword.jsx";
 import BedDashboard from "./assets/Pages/BedDashboard.jsx";
+import AllCustomersPage from "./assets/Pages/AllCustomers.jsx";
+import EditCustomer from "./assets/Components/editCustomer.jsx";
+import LoadingBar from "react-top-loading-bar";
+import TanningHistory from "./assets/Pages/TanningHistory.jsx";
+import Redemption from "./assets/Pages/Redemption.jsx";
 
 function App() {
   const [token, setToken] = useState("");
+  const [loadingbar, setloadingbar] = useState(0);
+
+  const setProgress = (prog) => {
+    setloadingbar(prog);
+  };
 
   useEffect(() => {
     const jwt = window.sessionStorage.getItem("jwtToken") || "";
@@ -26,6 +36,7 @@ function App() {
 
       <BrowserRouter>
         <Navbar jwtToken={token} />
+        <LoadingBar height={5} color="#ffffff" progress={loadingbar} />
         <Routes>
           <Route path="/" element={<Customer />} />
           <Route path="/customer" element={<Customer />} />
@@ -37,12 +48,34 @@ function App() {
             ""
           ) : (
             <>
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/beds" element={<BedDashboard />} />
-              <Route path="/enroll" element={<Enrollment />} />
-              <Route path="/redemption" element={<Customer />} />
-              <Route path="/tanning-history" element={<Customer />} />
-              <Route path="/all-customers" element={<Customer />} />
+              <Route
+                path="/admin"
+                element={<AdminDashboard setProgress={setProgress} />}
+              />
+              <Route
+                path="/beds"
+                element={<BedDashboard setProgress={setProgress} />}
+              />
+              <Route
+                path="/enroll"
+                element={<Enrollment setProgress={setProgress} />}
+              />
+              <Route
+                path="/redemption"
+                element={<Redemption setProgress={setProgress} />}
+              />
+              <Route
+                path="/tanning-history"
+                element={<TanningHistory setProgress={setProgress} />}
+              />
+              <Route
+                path="/all-customers"
+                element={<AllCustomersPage setProgress={setProgress} />}
+              />
+              <Route
+                path="/edit-customer/:id"
+                element={<EditCustomer setProgress={setProgress} />}
+              />
             </>
           )}
         </Routes>

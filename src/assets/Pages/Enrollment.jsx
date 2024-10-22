@@ -6,7 +6,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import calculateExpirationDate from "../Components/expirationDate";
 
-const EnrollmentForm = () => {
+import PropTypes from "prop-types";
+
+const EnrollmentForm = ({ setProgress }) => {
   const [phone, setPhone] = useState("");
   const [customer, setCustomer] = useState(null);
   const [newCustomer, setNewCustomer] = useState({
@@ -19,6 +21,7 @@ const EnrollmentForm = () => {
 
   // Fetch the latest packages on component mount and after package changes
   const fetchPackages = async () => {
+    setProgress(0);
     try {
       const latestPackages = await axios.get(
         "http://127.0.0.1:3000/api/v1/getPackages"
@@ -26,6 +29,8 @@ const EnrollmentForm = () => {
       setPackages(latestPackages.data.data.Packages);
     } catch (error) {
       console.error("Error fetching packages:", error);
+    } finally {
+      setProgress(100);
     }
   };
 
@@ -516,6 +521,10 @@ const EnrollmentForm = () => {
       </div>
     </div>
   );
+};
+
+EnrollmentForm.propTypes = {
+  setProgress: PropTypes.func.isRequired,
 };
 
 export default EnrollmentForm;

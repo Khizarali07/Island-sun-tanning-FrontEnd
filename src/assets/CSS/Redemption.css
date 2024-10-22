@@ -1,0 +1,283 @@
+.redemption-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .redemption-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin-bottom: 40px;
+  }
+  
+  .search-input {
+    width: 80%;
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  .search-input:focus {
+    border-color: #566f41;
+  }
+  
+  .search-button {
+    padding: 12px 20px;
+    background-color: #566f41;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    margin-top: 20px;
+  }
+  
+  .search-button:hover {
+    background-color: #9b6a13;
+    transform: scale(1.02);
+  }
+  
+  .customer-info {
+    margin-top: 30px;
+    text-align: left;
+  }
+  
+  .customer-details {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+  }
+  
+  .customer-details h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .customer-details p {
+    font-size: 15px;
+    margin: 5px 0;
+  }
+  
+  .package-bed-selection {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    flex-direction: column;
+    
+  }
+
+  .package-bed-selection h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+
+  }
+
+  .beds-section {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    flex-direction: column;
+    
+  }
+  .beds-section h4{
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  label{
+    margin-top: 4px;
+  }
+  
+  .packages-section,
+  .beds-section {
+    width: 100%;
+    
+  }
+  
+  .package-option,
+  .bed-option {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: left;
+    
+  }
+  
+  .package-option input,
+  .bed-option input {
+    margin-right: 10px;
+  }
+  
+  .consent-section {
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0,0.2);
+
+  }
+  
+  .consent-checkbox {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+  }
+  .consent-checkbox label {
+    margin-left: 10px;
+    margin-top: 3px;
+  }
+  
+  .signature-section {
+    margin-top: 20px;
+  }
+  
+  .signature-section input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .punch-button {
+    padding: 12px 20px;
+    background-color: #566f41;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .punch-button:hover {
+    background-color: #9b6a13;
+  }
+  
+  .punch-button:disabled {
+    background-color: #d3d3d3;
+  }
+  
+
+  /* Punch History Styles */
+.punch-history-section {
+    margin-top: 30px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .punch-history-section h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .punch-history-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+  }
+  
+  .punch-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  }
+  
+  .punch-history-item span {
+    font-size: 16px;
+    color: #333;
+    width: 1000%;
+
+  }
+  
+  .delete-button {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.3s ease;
+  }
+
+  .delete-button:hover{
+    background-color: white;
+  }
+
+  .top-heading{
+    font-weight: bold;
+  }
+  
+  
+  
+  .delete-button i {
+    margin-left: 5px;
+  }
+  
+  /* Update any other section styles as needed */
+  .signature-canvas {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  height: 200px;
+  background-color: #f9f9f9;
+}
+
+.signature-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #566f41;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #9b6a13;
+}
+
+

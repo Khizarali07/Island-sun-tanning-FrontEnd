@@ -6,7 +6,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import BedList from "../Components/BedList";
 
-const BedDashboard = () => {
+import PropTypes from "prop-types";
+
+const BedDashboard = ({ setProgress }) => {
   const [bedName, setBedName] = useState(""); // For bed creation/edit
   const [availablePackages, setAvailablePackages] = useState([]); // Store the packages fetched
   const [selectedPackages, setSelectedPackages] = useState([]); // Store selected packages for bed creation/edit
@@ -19,6 +21,7 @@ const BedDashboard = () => {
 
   // Fetch packages for bed creation
   const fetchPackages = async () => {
+    setProgress(0);
     setLoading(true);
     try {
       const packages = await axios.get(
@@ -42,6 +45,7 @@ const BedDashboard = () => {
       console.error("Error fetching beds", error);
     } finally {
       setLoading(false);
+      setProgress(100);
     }
   };
 
@@ -204,6 +208,10 @@ const BedDashboard = () => {
       </div>
     </div>
   );
+};
+
+BedDashboard.propTypes = {
+  setProgress: PropTypes.func.isRequired,
 };
 
 export default BedDashboard;

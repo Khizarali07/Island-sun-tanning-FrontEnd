@@ -4,7 +4,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Packages from "../Components/Packages";
 
-function AdminDashboard() {
+import PropTypes from "prop-types";
+
+function AdminDashboard({ setProgress }) {
   const [name, setName] = useState("");
   const [type, setType] = useState("period");
   const [redemptions, setRedemptions] = useState(0);
@@ -18,8 +20,10 @@ function AdminDashboard() {
   const formRef = useRef(null);
 
   const fetchPackages = async () => {
+    setProgress(0);
     const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
     setPackageList(data.data.data.Packages);
+    setProgress(100);
   };
 
   useEffect(() => {
@@ -215,5 +219,9 @@ function AdminDashboard() {
     </>
   );
 }
+
+AdminDashboard.propTypes = {
+  setProgress: PropTypes.func.isRequired, // `setProgress` is a required function
+};
 
 export default AdminDashboard;

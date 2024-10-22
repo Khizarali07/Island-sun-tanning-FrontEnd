@@ -22,8 +22,6 @@ function Customer() {
         }
       );
 
-      console.log(response);
-
       if (response.data.data.currentCustomer) {
         setCustomer(response.data.data.currentCustomer); // Accessing customer data properly
         toast.success("Customer Founded", {
