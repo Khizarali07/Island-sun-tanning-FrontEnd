@@ -21,12 +21,12 @@ function EditCustomer() {
   const fetchingData = async () => {
     try {
       const latestPackages = await axios.get(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
       );
       setPackages(latestPackages.data.data.Packages);
 
       const updatedCustomer = await axios.post(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           _id: id,
         }
@@ -68,7 +68,7 @@ function EditCustomer() {
         console.log(expiration);
 
         const res = await axios.post(
-          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${id}`,
+          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${id}`,
           {
             selectedPackage,
             status: expiration === null ? "active" : "redeemed",
@@ -80,7 +80,7 @@ function EditCustomer() {
       } else {
         const redemptions = packageDetails.redemptions;
         await axios.post(
-          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${id}`,
+          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${id}`,
           {
             selectedPackage,
             status,
@@ -90,7 +90,7 @@ function EditCustomer() {
       }
 
       const updatedCustomer = await axios.post(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           _id: id,
         }
@@ -117,12 +117,12 @@ function EditCustomer() {
     e.preventDefault();
     try {
       await axios.post(
-        `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomer/${id}`,
+        `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomer/${id}`,
         newCustomer
       );
 
       const updatedCustomer = await axios.post(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           _id: id,
         }
@@ -151,7 +151,7 @@ function EditCustomer() {
     try {
       if (window.confirm("Are you sure you want to delete this customer?")) {
         await axios.delete(
-          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomer/${id}`
+          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomer/${id}`
         );
         toast.success("Customer deleted successfully", {
           duration: 2000,
@@ -178,7 +178,7 @@ function EditCustomer() {
         )
       ) {
         await axios.post(
-          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomerPackage/${id}`,
+          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomerPackage/${id}`,
           { packageId }
         );
 

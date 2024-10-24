@@ -23,7 +23,7 @@ function Login({ setToken }) {
     e.preventDefault();
 
     const response = await axios.post(
-      "http://island-sun-tanning-backend-production.up.railway.app/api/v1/login",
+      "https://island-sun-tanning-backend-production.up.railway.app/api/v1/login",
       {
         username,
         password,

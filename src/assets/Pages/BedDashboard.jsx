@@ -25,7 +25,7 @@ const BedDashboard = ({ setProgress }) => {
     setLoading(true);
     try {
       const packages = await axios.get(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
       );
       setAvailablePackages(packages.data.data.Packages);
     } catch (error) {
@@ -40,7 +40,7 @@ const BedDashboard = ({ setProgress }) => {
     setLoading(true);
     try {
       const beds = await axios.get(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getBeds"
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getBeds"
       );
 
       setBeds(beds.data.data.beds);
@@ -83,7 +83,7 @@ const BedDashboard = ({ setProgress }) => {
       };
 
       await axios.post(
-        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/createBed",
+        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/createBed",
         {
           newBed,
         }
@@ -126,7 +126,7 @@ const BedDashboard = ({ setProgress }) => {
     };
 
     const response = await axios.patch(
-      `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateBed/${editingBedId}`,
+      `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateBed/${editingBedId}`,
       newBed
     );
 

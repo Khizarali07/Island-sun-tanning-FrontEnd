@@ -23,7 +23,7 @@ const TanningHistory = ({ setProgress }) => {
       // Format date as YYYY-MM-DD
 
       const response = await axios.get(
-        `http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPunchHistory/${date}`
+        `https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPunchHistory/${date}`
       );
 
       if (response.data.data.customers) {
