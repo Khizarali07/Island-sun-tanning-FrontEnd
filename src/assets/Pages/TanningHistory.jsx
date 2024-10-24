@@ -20,12 +20,12 @@ const TanningHistory = ({ setProgress }) => {
     setLoading(true);
     setProgress(0);
     try {
-      const formattedDate = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+      // Format date as YYYY-MM-DD
 
       const response = await axios.get(
-        `http://127.0.0.1:3000/api/v1/getPunchHistory/${formattedDate}`
+        `http://127.0.0.1:3000/api/v1/getPunchHistory/${date}`
       );
-      console.log(response);
+
       if (response.data.data.customers) {
         setPunchHistory(response.data.data.customers);
         toast.success("Punch History Found successful", {

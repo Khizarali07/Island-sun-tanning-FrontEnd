@@ -71,7 +71,7 @@ function EditCustomer() {
           `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${id}`,
           {
             selectedPackage,
-            status,
+            status: expiration === null ? "active" : "redeemed",
             remainingRedemptions: redemptions,
             expiration,
           }
@@ -203,9 +203,10 @@ function EditCustomer() {
   // // Render package status (active, expired, fully redeemed)
   const renderPackageStatus = (pkg) => {
     const currentDate = new Date();
-    if (pkg.status === "new") return "New Package";
+    if (pkg.status === "active") return "New Package";
     if (pkg.packageId.isUnlimited) return "Active Package";
-    if (pkg.remainingRedemptions === 0) return "Fully Redeemed";
+    if (pkg.remainingRedemptions === 0 && pkg.expiration === null)
+      return "Fully Redeemed";
     if (pkg.expiration && new Date(pkg.expiration) < currentDate)
       return "Expired";
     return "Active Package";

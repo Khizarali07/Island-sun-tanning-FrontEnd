@@ -56,7 +56,7 @@ function AdminDashboard({ setProgress }) {
           newPackage,
         }
       );
-      console.log(createdPackage);
+
       toast.success("Package created successfully", {
         duration: 2000,
         position: "top-center",
@@ -91,20 +91,22 @@ function AdminDashboard({ setProgress }) {
 
   const handleupdate = async () => {
     setLoading(true);
+
+    const typeChange =
+      type === "period" && durationUnit === null ? "days" : durationUnit;
+
     const newPackage = {
       name,
       duration: type === "period" ? duration : null, // Store custom duration for unlimited packages
-      durationUnit: type === "period" ? durationUnit : null,
+      durationUnit: type === "period" ? typeChange : null,
       redemptions: type === "number" ? Number(redemptions) : 0,
       isUnlimited: type === "period",
     };
-    console.log(id);
 
     const response = await axios.patch(
       `http://127.0.0.1:3000/api/v1/updatePackage/${id}`,
       newPackage
     );
-    console.log(response);
 
     if (response.data.status) {
       toast.success("Package updated successfully", {
@@ -122,6 +124,7 @@ function AdminDashboard({ setProgress }) {
     setDuration(1);
     setDurationUnit("days");
     setLoading(false);
+    setIsEditing(false);
   };
 
   return (
@@ -195,6 +198,7 @@ function AdminDashboard({ setProgress }) {
                   onChange={(e) => setRedemptions(e.target.value)}
                   className="form-input"
                   placeholder="Enter number of redemptions"
+                  min="1"
                   required
                 />
               </div>

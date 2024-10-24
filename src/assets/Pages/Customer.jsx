@@ -7,11 +7,10 @@ import toast from "react-hot-toast";
 function Customer() {
   const [phone, setPhone] = useState("");
   const [customer, setCustomer] = useState(null);
+  const [packages, setPackages] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (e) => {
-    console.log(phone);
-
     e.preventDefault();
     setLoading(true);
     try {
@@ -21,6 +20,8 @@ function Customer() {
           phone,
         }
       );
+      const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
+      setPackages(data.data.data.Packages);
 
       if (response.data.data.currentCustomer) {
         setCustomer(response.data.data.currentCustomer); // Accessing customer data properly
@@ -58,6 +59,11 @@ function Customer() {
     }
   };
 
+  const packageDetails = (pkgID) => {
+    const packageDetails = packages.find((pkg) => pkg._id === pkgID);
+    return packageDetails;
+  };
+
   return (
     <>
       <div className="customer-screen-container">
@@ -81,17 +87,17 @@ function Customer() {
             <h4 className="packages-title">Your Packages</h4>
             {customer?.packages?.length > 0 ? (
               customer.packages.map((pkg) => {
-                console.log("Package:", pkg);
                 return (
                   <div key={pkg._id || Math.random()} className="package-card">
                     {pkg.packageId ? (
                       <>
                         <h4 className="package-title">
-                          Package Name: {pkg.packageId.name || "N/A"}
+                          Package Name:{" "}
+                          {packageDetails(pkg.packageId).name || "N/A"}
                         </h4>
                         <p className="package-details">
                           Remaining Redemptions:{" "}
-                          {pkg.packageId.isUnlimited
+                          {packageDetails(pkg.packageId).isUnlimited
                             ? "Unlimited"
                             : pkg.remainingRedemptions}
                         </p>

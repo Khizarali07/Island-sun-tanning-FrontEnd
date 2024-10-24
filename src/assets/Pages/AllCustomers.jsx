@@ -4,7 +4,7 @@ import Loader from "../Components/Loader";
 import axios from "axios";
 import toast from "react-hot-toast";
 import * as XLSX from "xlsx";
-import InfiniteScroll from "react-infinite-scroll-component";
+// import InfiniteScroll from "react-infinite-scroll-component";
 
 import PropTypes from "prop-types";
 
@@ -154,115 +154,115 @@ const AllCustomersPage = ({ setProgress }) => {
 
   // Infinite scroll logic
 
-  const loadMoreCustomers = () => {
-    setTimeout(() => {
-      setCurrentPage((prevPage) => prevPage + 1);
-      setInputPage((prevPage) => prevPage + 1);
-    }, 2500);
-  };
+  // const loadMoreCustomers = () => {
+  //   setTimeout(() => {
+  //     setCurrentPage((prevPage) => prevPage + 1);
+  //     setInputPage((prevPage) => prevPage + 1);
+  //   }, 2500);
+  // };
 
   return (
-    <InfiniteScroll
-      dataLength={currentPage} // This is important field to render the next data
-      next={loadMoreCustomers} // Function to be called for loading more data
-      hasMore={currentPage < totalPages} // Indicates if there are more items to load
-      loader={<Loader />} // You can use your loader component here
-    >
-      <div className="all-customers-container">
-        <h1 className="all-customers-title">Customer Management</h1>
+    // <InfiniteScroll
+    //   dataLength={currentPage} // This is important field to render the next data
+    //   next={loadMoreCustomers} // Function to be called for loading more data
+    //   hasMore={currentPage < totalPages} // Indicates if there are more items to load
+    //   loader={<Loader />} // You can use your loader component here
+    // >
+    <div className="all-customers-container">
+      <h1 className="all-customers-title">Customer Management</h1>
 
-        {/* Export Button */}
-        <div className="export-section">
-          <button className="export-button" onClick={handleExport}>
-            Export to Excel
-          </button>
-        </div>
-
-        {loading ? (
-          <Loader />
-        ) : currentItems.length > 0 ? (
-          <div className="customers-list-container">
-            {currentItems.map((customer) => (
-              <div key={customer._id} className="customer-card">
-                <h3 className="customer-name">{customer.name}</h3>
-                <p>
-                  <span className="label">Date Created:</span>{" "}
-                  {new Date(customer.createdAt).toLocaleDateString()}
-                </p>
-                <p>
-                  <span className="label">Phone:</span> {customer.phone}
-                </p>
-                <p>
-                  <span className="label">Email:</span>{" "}
-                  {customer.email ? customer.email : "N/A"}
-                </p>
-                <p>
-                  <span className="label">Last Check-in:</span>{" "}
-                  {customer.punchHistory.length > 0
-                    ? new Date(
-                        customer.punchHistory[
-                          customer.punchHistory.length - 1
-                        ].date
-                      ).toLocaleDateString()
-                    : "No Check-ins"}
-                </p>
-                <div className="actions-container">
-                  <button
-                    className="edit-button"
-                    onClick={() =>
-                      (window.location.href = `/edit-customer/${customer._id}`)
-                    }
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteCustomer(customer._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {/* Pagination */}
-            <div className="pagination">
-              <button
-                className="pagination-button"
-                onClick={() => {
-                  paginate(currentPage - 1);
-                }}
-                disabled={currentPage === 1}
-              >
-                &lt; Previous
-              </button>
-              <div className="page-info-container">
-                Page{" "}
-                <input
-                  type="text"
-                  value={inputPage}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  className="page-input"
-                />{" "}
-                of {totalPages}
-              </div>
-              <button
-                className="pagination-button"
-                onClick={() => {
-                  paginate(currentPage + 1);
-                }}
-                disabled={currentPage === totalPages}
-              >
-                Next &gt;
-              </button>
-            </div>
-          </div>
-        ) : (
-          <p>No customers found.</p>
-        )}
+      {/* Export Button */}
+      <div className="export-section">
+        <button className="export-button" onClick={handleExport}>
+          Export to Excel
+        </button>
       </div>
-    </InfiniteScroll>
+
+      {loading ? (
+        <Loader />
+      ) : currentItems.length > 0 ? (
+        <div className="customers-list-container">
+          {currentItems.map((customer) => (
+            <div key={customer._id} className="customer-card">
+              <h3 className="customer-name">{customer.name}</h3>
+              <p>
+                <span className="label">Date Created:</span>{" "}
+                {new Date(customer.createdAt).toLocaleDateString()}
+              </p>
+              <p>
+                <span className="label">Phone:</span> {customer.phone}
+              </p>
+              <p>
+                <span className="label">Email:</span>{" "}
+                {customer.email ? customer.email : "N/A"}
+              </p>
+              <p>
+                <span className="label">Last Check-in:</span>{" "}
+                {customer.punchHistory.length > 0
+                  ? new Date(
+                      customer.punchHistory[
+                        customer.punchHistory.length - 1
+                      ].date
+                    ).toLocaleDateString()
+                  : "No Check-ins"}
+              </p>
+              <div className="actions-container">
+                <button
+                  className="edit-button"
+                  onClick={() =>
+                    (window.location.href = `/edit-customer/${customer._id}`)
+                  }
+                >
+                  Edit
+                </button>
+                <button
+                  className="edit-button"
+                  onClick={() => handleDeleteCustomer(customer._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {/* Pagination */}
+          <div className="pagination">
+            <button
+              className="pagination-button"
+              onClick={() => {
+                paginate(currentPage - 1);
+              }}
+              disabled={currentPage === 1}
+            >
+              &lt; Previous
+            </button>
+            <div className="page-info-container">
+              Page{" "}
+              <input
+                type="text"
+                value={inputPage}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                className="page-input"
+              />{" "}
+              of {totalPages}
+            </div>
+            <button
+              className="pagination-button"
+              onClick={() => {
+                paginate(currentPage + 1);
+              }}
+              disabled={currentPage === totalPages}
+            >
+              Next &gt;
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p>No customers found.</p>
+      )}
+    </div>
+    // </InfiniteScroll>
   );
 };
 

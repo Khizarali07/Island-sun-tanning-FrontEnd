@@ -40,7 +40,8 @@ const BedDashboard = ({ setProgress }) => {
     setLoading(true);
     try {
       const beds = await axios.get("http://127.0.0.1:3000/api/v1/getBeds");
-      setBeds(beds.data.data.Beds);
+
+      setBeds(beds.data.data.beds);
     } catch (error) {
       console.error("Error fetching beds", error);
     } finally {
@@ -76,7 +77,7 @@ const BedDashboard = ({ setProgress }) => {
     try {
       const newBed = {
         name: bedName,
-        packages: selectedPackages.map((pkg) => ({ id: pkg })),
+        packages: selectedPackages.map((pkg) => ({ _id: pkg })),
       };
 
       await axios.post("http://127.0.0.1:3000/api/v1/createBed", {
@@ -105,7 +106,7 @@ const BedDashboard = ({ setProgress }) => {
   const EditBed = (bed) => {
     setIsEditing(true);
     setEditingBedId(bed._id);
-    setBedName(bed.name); // Set the bed name to the form
+    setBedName(bed.Name); // Set the bed name to the form
     setSelectedPackages(bed.packages.map((pkg) => pkg.id));
 
     // Scroll to the form
@@ -116,14 +117,13 @@ const BedDashboard = ({ setProgress }) => {
     setLoading(true);
     const newBed = {
       name: bedName,
-      packages: selectedPackages.map((pkg) => ({ id: pkg, name: "" })),
+      packages: selectedPackages.map((pkg) => ({ _id: pkg })),
     };
 
     const response = await axios.patch(
       `http://127.0.0.1:3000/api/v1/updateBed/${editingBedId}`,
       newBed
     );
-    console.log(response);
 
     if (response.data.status) {
       toast.success("Bed updated successfully", {
@@ -211,7 +211,7 @@ const BedDashboard = ({ setProgress }) => {
 };
 
 BedDashboard.propTypes = {
-  setProgress: PropTypes.func.isRequired,
+  setProgress: PropTypes.func,
 };
 
 export default BedDashboard;

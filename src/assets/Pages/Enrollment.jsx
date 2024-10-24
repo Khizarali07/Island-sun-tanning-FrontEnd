@@ -49,8 +49,6 @@ const EnrollmentForm = ({ setProgress }) => {
         }
       );
 
-      console.log(response);
-
       if (response.data.data.currentCustomer) {
         setCustomer(response.data.data.currentCustomer); // Set the customer data
         setNewCustomer({
@@ -94,7 +92,6 @@ const EnrollmentForm = ({ setProgress }) => {
       const packageDetails = packages.find(
         (pkg) => pkg._id === selectedPackage
       );
-      console.log("Package details for enrollment:", packageDetails);
 
       let expiration = null;
 
@@ -119,7 +116,6 @@ const EnrollmentForm = ({ setProgress }) => {
             now.setMonth(now.getMonth() + packageDetails.duration)
           );
         }
-        console.log("Calculated expiration date:", expiration);
       }
 
       const customerData = {
@@ -129,12 +125,11 @@ const EnrollmentForm = ({ setProgress }) => {
             packageId: selectedPackage,
             remainingRedemptions: packageDetails.redemptions,
             expiration,
-            status: "active", // Status indicating new package assignment
+            status: expiration === null ? "active" : "redeemed", // Status indicating new package assignment
           },
         ],
       };
 
-      console.log("Enrolling customer with data:", customerData);
       await axios.post("http://127.0.0.1:3000/api/v1/customers", {
         customerData,
       });
@@ -168,12 +163,10 @@ const EnrollmentForm = ({ setProgress }) => {
   const handleAssignPackage = async (e) => {
     e.preventDefault();
     try {
-      console.log(selectedPackage);
-
       const packageDetails = packages.find(
         (pkg) => pkg._id === selectedPackage
       );
-      console.log("Package details:", packageDetails);
+
       const { redemptions, status } = packageDetails;
 
       if (packageDetails.isUnlimited) {
@@ -182,18 +175,15 @@ const EnrollmentForm = ({ setProgress }) => {
           packageDetails.durationUnit
         );
 
-        console.log(expiration);
-
-        const res = await axios.post(
+        await axios.post(
           `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
           {
             selectedPackage,
-            status,
+            status: "redeemed",
             remainingRedemptions: redemptions,
             expiration,
           }
         );
-        console.log(res);
       } else {
         const redemptions = packageDetails.redemptions;
         await axios.post(
@@ -233,14 +223,10 @@ const EnrollmentForm = ({ setProgress }) => {
   const handleUpdateCustomer = async (e) => {
     e.preventDefault();
     try {
-      console.log("Updating customer details:", customer._id);
-
       const updatedCustomer = await axios.post(
         `http://127.0.0.1:3000/api/v1/updateCustomer/${customer._id}`,
         newCustomer
       );
-      // await updateCustomer(, newCustomer);
-      console.log("Updated customer data:", updatedCustomer);
 
       setCustomer(updatedCustomer);
       toast.success("Customer details updated successfully", {
@@ -323,9 +309,10 @@ const EnrollmentForm = ({ setProgress }) => {
   // // Render package status (active, expired, fully redeemed)
   const renderPackageStatus = (pkg) => {
     const currentDate = new Date();
-    if (pkg.status === "new") return "New Package";
+    if (pkg.status === "active") return "New Package";
     if (pkg.packageId.isUnlimited) return "Active Package";
-    if (pkg.remainingRedemptions === 0) return "Fully Redeemed";
+    if (pkg.remainingRedemptions === 0 && pkg.expiration === null)
+      return "Fully Redeemed";
     if (pkg.expiration && new Date(pkg.expiration) < currentDate)
       return "Expired";
     return "Active Package";

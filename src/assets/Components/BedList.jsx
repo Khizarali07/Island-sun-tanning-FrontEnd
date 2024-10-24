@@ -26,7 +26,7 @@ function BedList({ beds, fetchBeds, EditBed }) {
       {beds.map((bed) => (
         <div key={bed._id} className="bed-card">
           <div className="bed-header">
-            <h3 className="bed-name">{bed.name}</h3>
+            <h3 className="bed-name">{bed.Name}</h3>
             <div className="bed-actions">
               <FaEdit
                 className="edit-icon"
@@ -43,7 +43,7 @@ function BedList({ beds, fetchBeds, EditBed }) {
             <ul>
               {bed.packages.length > 0 ? (
                 bed.packages.map((pkg) => (
-                  <li key={pkg._id} className="package-item">
+                  <li key={pkg.id} className="package-item">
                     {pkg.name}
                   </li>
                 ))

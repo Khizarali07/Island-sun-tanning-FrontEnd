@@ -28,7 +28,6 @@ function Login({ setToken }) {
     });
 
     // Store the token in session as jwt token
-    console.log(response);
     if (response.data.status) {
       window.sessionStorage.setItem("jwtToken", response.data.token);
       setToken(response.data.token);

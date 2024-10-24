@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-// import SignatureCanvas from "react-signature-canvas"; // Signature pad for capturing touch signatures
+import { useState, useEffect, useRef } from "react";
 
 import InputMask from "react-input-mask";
 import "../CSS/Redemption.css";
@@ -8,20 +7,31 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 import PropTypes from "prop-types";
+import ConsentForm from "../Components/consentForm";
+import calculateExpirationDate from "../Components/expirationDate";
+import { FaTrash } from "react-icons/fa";
 
 function Redemption({ setProgress }) {
   const [phone, setPhone] = useState("");
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
-  //   const [availableBeds, setAvailableBeds] = useState([]);
+  const [availableBeds, setAvailableBeds] = useState([]);
   const [selectedBed, setSelectedBed] = useState(null);
   const [isConsentChecked, setIsConsentChecked] = useState(false);
-  //   const sigCanvasRef = useRef(null); // Reference to signature canvas
+
   const [consentSignature, setConsentSignature] = useState("");
   const [packages, setPackages] = useState([]); // To fetch and store all available packages
+  const [allBeds, setAllBeds] = useState([]);
   const [assignPackageMode, setAssignPackageMode] = useState(false); // Control for assigning new package
   const navigate = useNavigate(); // Initialize useNavigate hook
+  const sigCanvasRef = useRef(null); // Reference to signature canvas
+
+  // Clear the signature pad
+  const clearSignature = () => {
+    sigCanvasRef.current.clear();
+    setConsentSignature("");
+  };
 
   const handleSearch = async () => {
     setLoading(true);
@@ -32,16 +42,11 @@ function Redemption({ setProgress }) {
           phone,
         }
       );
-      console.log(response.data.data.currentCustomer);
 
       if (response.data.data.currentCustomer) {
         setCustomer(response.data.data.currentCustomer);
         setAssignPackageMode(false); // Reset assign package mode
         setSelectedPackage(null);
-        toast.success("Customer Founded", {
-          duration: 2000,
-          position: "top-center",
-        });
       } else {
         setCustomer(null);
         toast.error("No customer found. You can enroll a new customer.", {
@@ -68,7 +73,10 @@ function Redemption({ setProgress }) {
     try {
       const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
       setPackages(data.data.data.Packages);
-      console.log(data.data.data.Packages);
+
+      const Beds = await axios.get(`http://127.0.0.1:3000/api/v1/getallbeds`);
+
+      setAllBeds(Beds.data.data);
     } catch (error) {
       console.error("Error fetching packages:", error);
     } finally {
@@ -80,6 +88,67 @@ function Redemption({ setProgress }) {
     fetchPackages();
   }, []);
 
+  const handlePackageSelection = async (packageId) => {
+    setSelectedPackage(packageId);
+    try {
+      const beds = await axios.get(
+        `http://127.0.0.1:3000/api/v1/getbeds/${packageId}`
+      );
+
+      setAvailableBeds(beds.data.data);
+    } catch (error) {
+      console.error("Error fetching beds", error);
+    }
+  };
+
+  const handleAssignPackage = async (e) => {
+    e.preventDefault();
+    try {
+      const packageDetails = packages.find(
+        (pkg) => pkg._id === selectedPackage
+      );
+
+      let expiration = "";
+
+      if (packageDetails.isUnlimited) {
+        expiration = calculateExpirationDate(
+          packageDetails.duration,
+          packageDetails.durationUnit
+        );
+      } else {
+        expiration = null;
+      }
+
+      await axios.post(
+        `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
+        {
+          selectedPackage,
+          status: packageDetails.status,
+          remainingRedemptions: packageDetails.redemptions,
+          expiration,
+        }
+      );
+
+      // await assignPackageToCustomer(customer._id, selectedPackage);
+      toast.success("Package assigned successfully", {
+        duration: 2000,
+        position: "top-center",
+      });
+
+      setAssignPackageMode(false);
+      setSelectedPackage(null);
+
+      // Refresh customer data to include the newly assigned package
+      await handleSearch();
+    } catch (error) {
+      toast.success("Failed to assign package", {
+        duration: 2000,
+        position: "top-center",
+      });
+      console.error("Error assigning package", error);
+    }
+  };
+
   // Categorize customer packages into different groups
   const categorizePackages = (packages) => {
     const unusedPackages = [];
@@ -87,14 +156,13 @@ function Redemption({ setProgress }) {
     const expiredOrUsedPackages = [];
 
     packages.forEach((pkg) => {
-      const { remainingRedemptions, packageId, status } = pkg;
+      const { status, expiration } = pkg;
 
-      if (status === "expired" || remainingRedemptions === 0) {
+      const isExpiredByDate = expiration && new Date(expiration) < new Date();
+
+      if (status === "expired" || isExpiredByDate) {
         expiredOrUsedPackages.push(pkg);
-      } else if (
-        status === "unused" &&
-        remainingRedemptions === packageId.redemptions
-      ) {
+      } else if (status === "unused" || status === "active") {
         unusedPackages.push(pkg);
       } else {
         inProgressPackages.push(pkg);
@@ -102,6 +170,16 @@ function Redemption({ setProgress }) {
     });
 
     return { unusedPackages, inProgressPackages, expiredOrUsedPackages };
+  };
+
+  const packageDetails = (pkgID) => {
+    const packageDetails = packages.find((pkg) => pkg._id === pkgID);
+    return packageDetails;
+  };
+
+  const bedDetails = (bedID) => {
+    const beddetails = allBeds.find((findbed) => findbed._id === bedID);
+    return beddetails;
   };
 
   const renderPackages = () => {
@@ -136,12 +214,12 @@ function Redemption({ setProgress }) {
                       id={pkg.packageId._id}
                       name="package"
                       value={pkg.packageId._id}
-                      // onChange={() => handlePackageSelection(pkg.packageId._id)}
-                      checked={selectedPackage === pkg.packageId._id}
+                      onChange={() => handlePackageSelection(pkg.packageId)}
+                      checked={selectedPackage === pkg.packageId}
                     />
-                    <label htmlFor={pkg.packageId._id}>
-                      {pkg.packageId.name} (
-                      {pkg.packageId.isUnlimited
+                    <label htmlFor={pkg.packageId}>
+                      {packageDetails(pkg.packageId).name} (
+                      {packageDetails(pkg.packageId).isUnlimited
                         ? "Unlimited redemptions"
                         : `${pkg.remainingRedemptions} redemption(s)`}{" "}
                       - Assigned on{" "}
@@ -159,15 +237,15 @@ function Redemption({ setProgress }) {
                   <div key={pkg._id} className="package-option">
                     <input
                       type="radio"
-                      id={pkg.packageId._id}
+                      id={pkg.packageId}
                       name="package"
-                      value={pkg.packageId._id}
-                      // onChange={() => handlePackageSelection(pkg.packageId._id)}
-                      checked={selectedPackage === pkg.packageId._id}
+                      value={pkg.packageId}
+                      onChange={() => handlePackageSelection(pkg.packageId)}
+                      checked={selectedPackage === pkg.packageId}
                     />
-                    <label htmlFor={pkg.packageId._id}>
-                      {pkg.packageId.name} (
-                      {pkg.packageId.isUnlimited
+                    <label htmlFor={pkg.packageId}>
+                      {packageDetails(pkg.packageId).name} (
+                      {packageDetails(pkg.packageId).isUnlimited
                         ? "Unlimited redemptions"
                         : `${pkg.remainingRedemptions} redemption(s)`}{" "}
                       - Assigned on{" "}
@@ -183,8 +261,9 @@ function Redemption({ setProgress }) {
                 <h5>Expired or Used Packages</h5>
                 {expiredOrUsedPackages.map((pkg) => (
                   <div key={pkg._id} className="package-option disabled">
-                    <label htmlFor={pkg.packageId._id}>
-                      {pkg.packageId.name} (Expired or Used - Assigned on{" "}
+                    <label htmlFor={pkg.packageId}>
+                      {packageDetails(pkg.packageId).name} (Expired or Used -
+                      Assigned on{" "}
                       {new Date(pkg.assignedDate).toLocaleDateString()})
                     </label>
                   </div>
@@ -206,6 +285,123 @@ function Redemption({ setProgress }) {
       }
     }
     return null;
+  };
+
+  const renderBeds = () => {
+    if (selectedPackage && availableBeds.length > 0) {
+      return (
+        <div className="beds-section">
+          <h4>Select a Bed</h4>
+          {availableBeds.map((bed) => (
+            <div key={bed._id} className="bed-option">
+              <input
+                type="radio"
+                id={bed._id}
+                name="bed"
+                value={bed._id}
+                onChange={() => setSelectedBed(bed._id)}
+                checked={selectedBed === bed._id}
+              />
+              <label htmlFor={bed._id}>{bed.name}</label>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return selectedPackage ? <p>No beds available for this package</p> : null;
+  };
+
+  // Handle the punch redemption
+  const handlePunchRedemption = async (e) => {
+    e.preventDefault();
+
+    if (!isConsentChecked || !consentSignature) {
+      toast.error("You must acknowledge the consent and provide a signature.", {
+        duration: 2000,
+        position: "top-center",
+      });
+      return;
+    }
+
+    try {
+      await axios.post("http://127.0.0.1:3000/api/v1/redemptions", {
+        customerId: customer._id,
+        packageId: selectedPackage,
+        bedId: selectedBed,
+        consentSignature,
+      });
+
+      toast.success("Redemption punched successfully", {
+        duration: 2000,
+        position: "top-center",
+      });
+
+      setSelectedPackage(null);
+      setSelectedBed(null);
+      clearSignature(); // Clear signature after submission
+      setIsConsentChecked(false);
+
+      // Refresh customer data to update punch history
+      await handleSearch();
+    } catch (error) {
+      toast.error("Failed to punch redemption", {
+        duration: 2000,
+        position: "top-center",
+      });
+      console.error("Punch Redemption Error", error);
+    }
+  };
+
+  // Handle revert punch
+  const handleRevertPunch = async (punchId, packageId) => {
+    try {
+      await axios.post("http://127.0.0.1:3000/api/v1/revertRedemptions", {
+        customerId: customer._id,
+        packageId,
+        punchId,
+      });
+
+      // Refresh customer data after revert
+      await handleSearch();
+    } catch (error) {
+      alert("Failed to revert punch");
+      console.error("Revert Redemption Error", error);
+    }
+  };
+
+  // Render punch history
+  const renderPunchHistory = () => {
+    if (
+      !customer ||
+      !customer.punchHistory ||
+      customer.punchHistory.length === 0
+    ) {
+      return <p>No punch history available</p>;
+    }
+
+    return (
+      <div className="punch-history-section">
+        <h4>Punch History</h4>
+        <ul className="punch-history-list">
+          {customer.punchHistory.map((punch) => (
+            <li key={punch._id} className="punch-history-item">
+              <span>
+                {`Punch on ${new Date(punch.date).toLocaleString()} - Bed: ${
+                  bedDetails(punch.bedId).name
+                } - Package: ${packageDetails(punch.packageId).name}`}
+              </span>
+              <button
+                className="delete-button"
+                onClick={() => handleRevertPunch(punch._id, punch.packageId)}
+              >
+                <FaTrash className="delete-icon" />
+                {/* Font Awesome delete icon */}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   };
 
   return (
@@ -249,12 +445,20 @@ function Redemption({ setProgress }) {
 
           <div className="package-bed-selection">{renderPackages()}</div>
 
-          <div>{/* {renderBeds()} */}</div>
-          {/* {selectedBed && renderConsentForm()} */}
+          <div>{renderBeds()}</div>
+          {selectedBed && (
+            <ConsentForm
+              isConsentChecked={isConsentChecked}
+              setIsConsentChecked={setIsConsentChecked}
+              setConsentSignature={setConsentSignature}
+              clearSignature={clearSignature}
+              sigCanvasRef={sigCanvasRef}
+            />
+          )}
           {selectedBed && isConsentChecked && consentSignature && (
             <button
               className="punch-button"
-              //   onClick={handlePunchRedemption}
+              onClick={handlePunchRedemption}
               disabled={!isConsentChecked || !consentSignature}
             >
               Punch Redemption
@@ -266,9 +470,7 @@ function Redemption({ setProgress }) {
       {assignPackageMode && (
         <div className="assign-package-section">
           <h3>Assign New Package</h3>
-          <form
-          //   onSubmit={handleAssignPackage}
-          >
+          <form onSubmit={handleAssignPackage}>
             <select
               value={selectedPackage}
               onChange={(e) => setSelectedPackage(e.target.value)}
@@ -289,7 +491,7 @@ function Redemption({ setProgress }) {
         </div>
       )}
 
-      {/* {customer && renderPunchHistory()} */}
+      {customer && renderPunchHistory()}
     </div>
   );
 }
