@@ -15,12 +15,14 @@ function Customer() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:3000/api/v1/getCustomers",
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           phone,
         }
       );
-      const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
+      const data = await axios.get(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+      );
       setPackages(data.data.data.Packages);
 
       if (response.data.data.currentCustomer) {

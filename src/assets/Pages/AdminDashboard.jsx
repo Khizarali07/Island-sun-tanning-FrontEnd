@@ -21,7 +21,9 @@ function AdminDashboard({ setProgress }) {
 
   const fetchPackages = async () => {
     setProgress(0);
-    const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
+    const data = await axios.get(
+      "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+    );
     setPackageList(data.data.data.Packages);
     setProgress(100);
   };
@@ -51,7 +53,7 @@ function AdminDashboard({ setProgress }) {
       };
 
       const createdPackage = await axios.post(
-        "http://127.0.0.1:3000/api/v1/createPackage",
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/createPackage",
         {
           newPackage,
         }
@@ -104,7 +106,7 @@ function AdminDashboard({ setProgress }) {
     };
 
     const response = await axios.patch(
-      `http://127.0.0.1:3000/api/v1/updatePackage/${id}`,
+      `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updatePackage/${id}`,
       newPackage
     );
 
@@ -115,7 +117,9 @@ function AdminDashboard({ setProgress }) {
       });
     }
 
-    const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
+    const data = await axios.get(
+      "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+    );
     setPackageList(data.data.data.Packages);
 
     setName("");

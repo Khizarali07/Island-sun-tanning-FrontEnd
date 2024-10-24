@@ -25,7 +25,7 @@ const BedDashboard = ({ setProgress }) => {
     setLoading(true);
     try {
       const packages = await axios.get(
-        "http://127.0.0.1:3000/api/v1/getPackages"
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
       );
       setAvailablePackages(packages.data.data.Packages);
     } catch (error) {
@@ -39,7 +39,9 @@ const BedDashboard = ({ setProgress }) => {
   const fetchBeds = async () => {
     setLoading(true);
     try {
-      const beds = await axios.get("http://127.0.0.1:3000/api/v1/getBeds");
+      const beds = await axios.get(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getBeds"
+      );
 
       setBeds(beds.data.data.beds);
     } catch (error) {
@@ -80,9 +82,12 @@ const BedDashboard = ({ setProgress }) => {
         packages: selectedPackages.map((pkg) => ({ _id: pkg })),
       };
 
-      await axios.post("http://127.0.0.1:3000/api/v1/createBed", {
-        newBed,
-      });
+      await axios.post(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/createBed",
+        {
+          newBed,
+        }
+      );
 
       toast.success("Bed created successfully", {
         duration: 2000,
@@ -121,7 +126,7 @@ const BedDashboard = ({ setProgress }) => {
     };
 
     const response = await axios.patch(
-      `http://127.0.0.1:3000/api/v1/updateBed/${editingBedId}`,
+      `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateBed/${editingBedId}`,
       newBed
     );
 

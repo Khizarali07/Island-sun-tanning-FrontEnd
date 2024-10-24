@@ -21,7 +21,7 @@ const AllCustomersPage = ({ setProgress }) => {
       setProgress(0);
       setLoading(true);
       const data = await axios.get(
-        "http://127.0.0.1:3000/api/v1/getAllCustomers"
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getAllCustomers"
       );
 
       setCustomers(data.data.data.customers);
@@ -42,7 +42,7 @@ const AllCustomersPage = ({ setProgress }) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
       try {
         await axios.delete(
-          `http://127.0.0.1:3000/api/v1/deleteCustomer/${customerId}`
+          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomer/${customerId}`
         );
         toast.success("Customer deleted successfully", {
           duration: 2000,

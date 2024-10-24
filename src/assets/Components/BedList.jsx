@@ -11,7 +11,9 @@ function BedList({ beds, fetchBeds, EditBed }) {
   }
 
   const deletebeds = async (bedId) => {
-    await axios.delete(`http://127.0.0.1:3000/api/v1/deleteBed/${bedId}`);
+    await axios.delete(
+      `http://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteBed/${bedId}`
+    );
 
     toast.success("Package deleted successfully", {
       duration: 2000,

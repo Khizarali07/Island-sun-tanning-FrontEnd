@@ -37,7 +37,7 @@ function Redemption({ setProgress }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:3000/api/v1/getCustomers",
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           phone,
         }
@@ -71,10 +71,14 @@ function Redemption({ setProgress }) {
   const fetchPackages = async () => {
     setProgress(0);
     try {
-      const data = await axios.get("http://127.0.0.1:3000/api/v1/getPackages");
+      const data = await axios.get(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+      );
       setPackages(data.data.data.Packages);
 
-      const Beds = await axios.get(`http://127.0.0.1:3000/api/v1/getallbeds`);
+      const Beds = await axios.get(
+        `http://island-sun-tanning-backend-production.up.railway.app/api/v1/getallbeds`
+      );
 
       setAllBeds(Beds.data.data);
     } catch (error) {
@@ -92,7 +96,7 @@ function Redemption({ setProgress }) {
     setSelectedPackage(packageId);
     try {
       const beds = await axios.get(
-        `http://127.0.0.1:3000/api/v1/getbeds/${packageId}`
+        `http://island-sun-tanning-backend-production.up.railway.app/api/v1/getbeds/${packageId}`
       );
 
       setAvailableBeds(beds.data.data);
@@ -120,7 +124,7 @@ function Redemption({ setProgress }) {
       }
 
       await axios.post(
-        `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
+        `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${customer._id}`,
         {
           selectedPackage,
           status: packageDetails.status,
@@ -324,12 +328,15 @@ function Redemption({ setProgress }) {
     }
 
     try {
-      await axios.post("http://127.0.0.1:3000/api/v1/redemptions", {
-        customerId: customer._id,
-        packageId: selectedPackage,
-        bedId: selectedBed,
-        consentSignature,
-      });
+      await axios.post(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/redemptions",
+        {
+          customerId: customer._id,
+          packageId: selectedPackage,
+          bedId: selectedBed,
+          consentSignature,
+        }
+      );
 
       toast.success("Redemption punched successfully", {
         duration: 2000,
@@ -355,11 +362,14 @@ function Redemption({ setProgress }) {
   // Handle revert punch
   const handleRevertPunch = async (punchId, packageId) => {
     try {
-      await axios.post("http://127.0.0.1:3000/api/v1/revertRedemptions", {
-        customerId: customer._id,
-        packageId,
-        punchId,
-      });
+      await axios.post(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/revertRedemptions",
+        {
+          customerId: customer._id,
+          packageId,
+          punchId,
+        }
+      );
 
       // Refresh customer data after revert
       await handleSearch();

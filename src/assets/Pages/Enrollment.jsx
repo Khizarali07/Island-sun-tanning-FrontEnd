@@ -24,7 +24,7 @@ const EnrollmentForm = ({ setProgress }) => {
     setProgress(0);
     try {
       const latestPackages = await axios.get(
-        "http://127.0.0.1:3000/api/v1/getPackages"
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
       );
       setPackages(latestPackages.data.data.Packages);
     } catch (error) {
@@ -43,7 +43,7 @@ const EnrollmentForm = ({ setProgress }) => {
     e.preventDefault();
     try {
       const response = await await axios.post(
-        "http://127.0.0.1:3000/api/v1/getCustomers",
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           phone,
         }
@@ -130,9 +130,12 @@ const EnrollmentForm = ({ setProgress }) => {
         ],
       };
 
-      await axios.post("http://127.0.0.1:3000/api/v1/customers", {
-        customerData,
-      });
+      await axios.post(
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/customers",
+        {
+          customerData,
+        }
+      );
 
       toast.success("Customer enrolled successfully", {
         duration: 2000,
@@ -176,7 +179,7 @@ const EnrollmentForm = ({ setProgress }) => {
         );
 
         await axios.post(
-          `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
+          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${customer._id}`,
           {
             selectedPackage,
             status: "redeemed",
@@ -187,7 +190,7 @@ const EnrollmentForm = ({ setProgress }) => {
       } else {
         const redemptions = packageDetails.redemptions;
         await axios.post(
-          `http://127.0.0.1:3000/api/v1/updateCustomerPackage/${customer._id}`,
+          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${customer._id}`,
           {
             selectedPackage,
             status,
@@ -197,7 +200,7 @@ const EnrollmentForm = ({ setProgress }) => {
       }
 
       const updatedCustomer = await axios.post(
-        "http://127.0.0.1:3000/api/v1/getCustomers",
+        "http://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
         {
           phone,
         }
@@ -224,7 +227,7 @@ const EnrollmentForm = ({ setProgress }) => {
     e.preventDefault();
     try {
       const updatedCustomer = await axios.post(
-        `http://127.0.0.1:3000/api/v1/updateCustomer/${customer._id}`,
+        `http://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomer/${customer._id}`,
         newCustomer
       );
 
@@ -253,7 +256,7 @@ const EnrollmentForm = ({ setProgress }) => {
     try {
       if (window.confirm("Are you sure you want to delete this customer?")) {
         await axios.delete(
-          `http://127.0.0.1:3000/api/v1/deleteCustomer/${customer._id}`
+          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomer/${customer._id}`
         );
         toast.success("Customer deleted successfully", {
           duration: 2000,
@@ -282,7 +285,7 @@ const EnrollmentForm = ({ setProgress }) => {
         )
       ) {
         await axios.post(
-          `http://127.0.0.1:3000/api/v1/deleteCustomerPackage/${customer._id}`,
+          `http://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomerPackage/${customer._id}`,
           { packageId }
         );
 
