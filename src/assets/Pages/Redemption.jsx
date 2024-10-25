@@ -222,8 +222,8 @@ function Redemption({ setProgress }) {
                       checked={selectedPackage === pkg.packageId}
                     />
                     <label htmlFor={pkg.packageId}>
-                      {packageDetails(pkg.packageId).name} (
-                      {packageDetails(pkg.packageId).isUnlimited
+                      {packageDetails(pkg.packageId)?.name} (
+                      {packageDetails(pkg.packageId)?.isUnlimited
                         ? "Unlimited redemptions"
                         : `${pkg.remainingRedemptions} redemption(s)`}{" "}
                       - Assigned on{" "}
@@ -248,8 +248,8 @@ function Redemption({ setProgress }) {
                       checked={selectedPackage === pkg.packageId}
                     />
                     <label htmlFor={pkg.packageId}>
-                      {packageDetails(pkg.packageId).name} (
-                      {packageDetails(pkg.packageId).isUnlimited
+                      {packageDetails(pkg.packageId)?.name} (
+                      {packageDetails(pkg.packageId)?.isUnlimited
                         ? "Unlimited redemptions"
                         : `${pkg.remainingRedemptions} redemption(s)`}{" "}
                       - Assigned on{" "}
@@ -266,7 +266,7 @@ function Redemption({ setProgress }) {
                 {expiredOrUsedPackages.map((pkg) => (
                   <div key={pkg._id} className="package-option disabled">
                     <label htmlFor={pkg.packageId}>
-                      {packageDetails(pkg.packageId).name} (Expired or Used -
+                      {packageDetails(pkg.packageId)?.name} (Expired or Used -
                       Assigned on{" "}
                       {new Date(pkg.assignedDate).toLocaleDateString()})
                     </label>
@@ -397,8 +397,8 @@ function Redemption({ setProgress }) {
             <li key={punch._id} className="punch-history-item">
               <span>
                 {`Punch on ${new Date(punch.date).toLocaleString()} - Bed: ${
-                  bedDetails(punch.bedId).name
-                } - Package: ${packageDetails(punch.packageId).name}`}
+                  bedDetails(punch.bedId)?.name
+                } - Package: ${packageDetails(punch.packageId)?.name}`}
               </span>
               <button
                 className="delete-button"
