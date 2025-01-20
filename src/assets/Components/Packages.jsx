@@ -9,7 +9,7 @@ import { FaEdit } from "react-icons/fa";
 function Packages({ packages, setPackages, updatePackage }) {
   const deletePackage = async (packageId) => {
     await axios.delete(
-      `https://island-sun-tanning-backend-production.up.railway.app/api/v1/deletePackage/${packageId}`
+      `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/deletePackage/${packageId}`
     );
 
     toast.success("Package deleted successfully", {
@@ -18,7 +18,7 @@ function Packages({ packages, setPackages, updatePackage }) {
     });
 
     const data = await axios.get(
-      "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+      "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getPackages"
     );
     setPackages(data.data.data.Packages);
   };

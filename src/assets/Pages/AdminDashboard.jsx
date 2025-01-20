@@ -22,7 +22,7 @@ function AdminDashboard({ setProgress }) {
   const fetchPackages = async () => {
     setProgress(0);
     const data = await axios.get(
-      "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+      "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getPackages"
     );
     setPackageList(data.data.data.Packages);
     setProgress(100);
@@ -53,7 +53,7 @@ function AdminDashboard({ setProgress }) {
       };
 
       const createdPackage = await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/createPackage",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/createPackage",
         {
           newPackage,
         }
@@ -106,7 +106,7 @@ function AdminDashboard({ setProgress }) {
     };
 
     const response = await axios.patch(
-      `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updatePackage/${id}`,
+      `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/updatePackage/${id}`,
       newPackage
     );
 
@@ -118,7 +118,7 @@ function AdminDashboard({ setProgress }) {
     }
 
     const data = await axios.get(
-      "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+      "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getPackages"
     );
     setPackageList(data.data.data.Packages);
 

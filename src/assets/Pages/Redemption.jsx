@@ -37,7 +37,7 @@ function Redemption({ setProgress }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getCustomers",
         {
           phone,
         }
@@ -72,12 +72,12 @@ function Redemption({ setProgress }) {
     setProgress(0);
     try {
       const data = await axios.get(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getPackages"
       );
       setPackages(data.data.data.Packages);
 
       const Beds = await axios.get(
-        `https://island-sun-tanning-backend-production.up.railway.app/api/v1/getallbeds`
+        `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getallbeds`
       );
 
       setAllBeds(Beds.data.data);
@@ -96,7 +96,7 @@ function Redemption({ setProgress }) {
     setSelectedPackage(packageId);
     try {
       const beds = await axios.get(
-        `https://island-sun-tanning-backend-production.up.railway.app/api/v1/getbeds/${packageId}`
+        `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getbeds/${packageId}`
       );
 
       setAvailableBeds(beds.data.data);
@@ -124,7 +124,7 @@ function Redemption({ setProgress }) {
       }
 
       await axios.post(
-        `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${customer._id}`,
+        `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/updateCustomerPackage/${customer._id}`,
         {
           selectedPackage,
           status: packageDetails.status,
@@ -329,7 +329,7 @@ function Redemption({ setProgress }) {
 
     try {
       await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/redemptions",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/redemptions",
         {
           customerId: customer._id,
           packageId: selectedPackage,
@@ -363,7 +363,7 @@ function Redemption({ setProgress }) {
   const handleRevertPunch = async (punchId, packageId) => {
     try {
       await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/revertRedemptions",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/revertRedemptions",
         {
           customerId: customer._id,
           packageId,

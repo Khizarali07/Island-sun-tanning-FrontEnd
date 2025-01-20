@@ -22,13 +22,10 @@ function Login({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.post(
-      "https://island-sun-tanning-backend-production.up.railway.app/api/v1/login",
-      {
-        username,
-        password,
-      }
-    );
+    const response = await axios.post("http://localhost:3000/api/v1/login", {
+      username,
+      password,
+    });
 
     // Store the token in session as jwt token
     if (response.data.status) {

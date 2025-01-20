@@ -24,7 +24,7 @@ const EnrollmentForm = ({ setProgress }) => {
     setProgress(0);
     try {
       const latestPackages = await axios.get(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getPackages"
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getPackages"
       );
       setPackages(latestPackages.data.data.Packages);
     } catch (error) {
@@ -43,7 +43,7 @@ const EnrollmentForm = ({ setProgress }) => {
     e.preventDefault();
     try {
       const response = await await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getCustomers",
         {
           phone,
         }
@@ -131,7 +131,7 @@ const EnrollmentForm = ({ setProgress }) => {
       };
 
       await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/customers",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/customers",
         {
           customerData,
         }
@@ -179,7 +179,7 @@ const EnrollmentForm = ({ setProgress }) => {
         );
 
         await axios.post(
-          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${customer._id}`,
+          `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/updateCustomerPackage/${customer._id}`,
           {
             selectedPackage,
             status: "redeemed",
@@ -190,7 +190,7 @@ const EnrollmentForm = ({ setProgress }) => {
       } else {
         const redemptions = packageDetails.redemptions;
         await axios.post(
-          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomerPackage/${customer._id}`,
+          `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/updateCustomerPackage/${customer._id}`,
           {
             selectedPackage,
             status,
@@ -200,7 +200,7 @@ const EnrollmentForm = ({ setProgress }) => {
       }
 
       const updatedCustomer = await axios.post(
-        "https://island-sun-tanning-backend-production.up.railway.app/api/v1/getCustomers",
+        "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/getCustomers",
         {
           phone,
         }
@@ -227,7 +227,7 @@ const EnrollmentForm = ({ setProgress }) => {
     e.preventDefault();
     try {
       const updatedCustomer = await axios.post(
-        `https://island-sun-tanning-backend-production.up.railway.app/api/v1/updateCustomer/${customer._id}`,
+        `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/updateCustomer/${customer._id}`,
         newCustomer
       );
 
@@ -256,7 +256,7 @@ const EnrollmentForm = ({ setProgress }) => {
     try {
       if (window.confirm("Are you sure you want to delete this customer?")) {
         await axios.delete(
-          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomer/${customer._id}`
+          `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/deleteCustomer/${customer._id}`
         );
         toast.success("Customer deleted successfully", {
           duration: 2000,
@@ -285,7 +285,7 @@ const EnrollmentForm = ({ setProgress }) => {
         )
       ) {
         await axios.post(
-          `https://island-sun-tanning-backend-production.up.railway.app/api/v1/deleteCustomerPackage/${customer._id}`,
+          `https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/deleteCustomerPackage/${customer._id}`,
           { packageId }
         );
 

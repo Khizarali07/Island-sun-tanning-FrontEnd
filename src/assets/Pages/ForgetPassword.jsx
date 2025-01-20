@@ -21,7 +21,7 @@ const ForgotPassword = () => {
 
     //   const response = await forgotPassword(email);
     const response = await axios.post(
-      "https://island-sun-tanning-backend-production.up.railway.app/api/v1/admin/forgot-password",
+      "https://island-sun-tanning-back-end-4xb6.vercel.app/api/v1/admin/forgot-password",
       { email }
     );
 
